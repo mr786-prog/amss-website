@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mechanical Division – AMS Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#050810;--surface:#0b0f1e;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--accent:#00d4ff;--accent2:#7b5ea7;--gold:#f0a500;--text:#e8edf8;--muted:#7a8499;--mech:#f0a500;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+    #cursor,#cursor-trail{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;}
+    #cursor{width:12px;height:12px;background:var(--gold);top:0;left:0;transform:translate(-50%,-50%);transition:transform .15s ease;}
+    #cursor-trail{width:36px;height:36px;border:1.5px solid rgba(240,165,0,.4);top:0;left:0;transform:translate(-50%,-50%);transition:all .3s ease;}
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(5,8,16,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .4s;}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;}
+    .logo-badge{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-family:'Bebas Neue';font-size:1.2rem;color:#fff;box-shadow:0 0 20px rgba(0,212,255,.3);}
+    .logo-image{width:48px;height:48px;border-radius:12px;object-fit:contain;box-shadow:0 0 20px rgba(0,212,255,.24);}
+    .logo-text{font-family:'Syne';font-weight:800;font-size:1.15rem;letter-spacing:.04em;}
+    .logo-text span{color:var(--accent);}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{text-decoration:none;color:var(--muted);font-size:.82rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:color .3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--gold);transition:width .3s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active{color:var(--gold);}
+    .nav-links a.active::after{width:100%;background:var(--gold);}
+    .nav-cta{padding:.5rem 1.3rem;border-radius:6px;background:linear-gradient(135deg,var(--gold),#e07b00);color:#fff;font-weight:700;font-size:.8rem;letter-spacing:.05em;text-decoration:none;transition:all .3s;box-shadow:0 0 20px rgba(240,165,0,.2);}
+    .nav-cta:hover{box-shadow:0 0 40px rgba(240,165,0,.5);transform:translateY(-2px);}
+    /* PAGE HERO */
+    #page-hero{min-height:72vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:10rem 4rem 5rem;position:relative;overflow:hidden;}
+    .ph-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(240,165,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 90% at 30% 50%,black 20%,transparent 100%);}
+    .ph-glow{position:absolute;z-index:0;border-radius:50%;filter:blur(120px);pointer-events:none;}
+    .pg1{width:700px;height:700px;background:rgba(240,165,0,.07);top:-150px;right:-100px;animation:fp1 10s ease-in-out infinite;}
+    .pg2{width:400px;height:400px;background:rgba(123,94,167,.06);bottom:-50px;left:200px;animation:fp2 12s ease-in-out infinite;}
+    @keyframes fp1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+    @keyframes fp2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-20px)}}
+    .ph-tag{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;border-radius:100px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1.3rem;animation:fadeUp .7s ease both;}
+    .ph-title{position:relative;z-index:1;font-family:'Bebas Neue';font-size:clamp(3.5rem,9vw,7.5rem);line-height:.95;color:#fff;animation:fadeUp .8s ease .1s both;}
+    .ph-title span{color:var(--gold);text-shadow:0 0 60px rgba(240,165,0,.5);}
+    .ph-desc{position:relative;z-index:1;max-width:600px;margin-top:1.3rem;font-size:1.02rem;line-height:1.8;color:var(--muted);animation:fadeUp .8s ease .2s both;}
+    .ph-btns{position:relative;z-index:1;display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;animation:fadeUp .8s ease .3s both;}
+    .btn-gold{padding:.8rem 1.9rem;border-radius:8px;background:linear-gradient(135deg,var(--gold),#e07b00);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 0 30px rgba(240,165,0,.2);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-gold:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(240,165,0,.4);}
+    .btn-ghost{padding:.8rem 1.9rem;border-radius:8px;border:1px solid var(--border);color:var(--text);font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;background:var(--glass);}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    section.content-section{padding:7rem 4rem;position:relative;z-index:1;}
+    .section-tag{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;}
+    .section-tag::before{content:'';width:18px;height:1.5px;background:var(--gold);}
+    h2{font-family:'Syne';font-weight:800;font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.1;}
+    .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 4rem;}
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:.1s;}
+    .reveal-delay-2{transition-delay:.2s;}
+    .reveal-delay-3{transition-delay:.3s;}
+    /* TEMBO SECTION */
+    .tembo-block{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+    .tembo-badge-large{display:inline-flex;align-items:center;gap:.8rem;padding:.7rem 1.5rem;border-radius:10px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.25);font-size:.85rem;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-top:2rem;}
+    .cert-badges{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;}
+    .cert{padding:.5rem 1rem;border-radius:6px;background:rgba(240,165,0,.06);border:1px solid rgba(240,165,0,.15);font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.08em;}
+    .tembo-visual{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:16px;overflow:hidden;}
+    .tv-item{background:var(--surface);padding:1.5rem;transition:background .3s;}
+    .tv-item:hover{background:rgba(240,165,0,.05);}
+    .tv-icon{font-size:1.6rem;margin-bottom:.5rem;}
+    .tv-name{font-weight:700;font-size:.88rem;margin-bottom:.2rem;}
+    .tv-desc{font-size:.78rem;color:var(--muted);}
+    /* PRODUCT CATEGORIES */
+    .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;position:relative;overflow:hidden;transition:all .4s;}
+    .cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
+    .cat-card:hover{border-color:rgba(240,165,0,.3);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4);}
+    .cat-icon{font-size:2rem;margin-bottom:1rem;}
+    .cat-title{font-family:'Syne';font-weight:700;font-size:1rem;margin-bottom:.5rem;}
+    .cat-desc{font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem;}
+    .cat-items{list-style:none;display:flex;flex-direction:column;gap:.3rem;}
+    .cat-items li{font-size:.8rem;color:var(--muted);padding-left:1rem;position:relative;}
+    .cat-items li::before{content:'›';position:absolute;left:0;color:var(--gold);}
+    .showcase-block{margin-top:2.5rem;}
+    .showcase-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.24);}
+    .showcase-card img{width:100%;height:auto;max-height:none;object-fit:contain;display:block;padding:1.5rem;background:rgba(255,255,255,.02);}
+    .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;margin-top:2.5rem;}
+    .product-item{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;}
+    .product-item:hover{border-color:rgba(240,165,0,.4);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3);}
+    .product-image{width:100%;height:220px;background:rgba(240,165,0,.05);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .product-image img{width:100%;height:100%;object-fit:contain;padding:.8rem;}
+    .product-info{padding:1.5rem;}
+    .product-name{font-family:'Syne';font-weight:700;font-size:1rem;margin-bottom:.5rem;color:var(--gold);}
+    .product-desc{font-size:.82rem;color:var(--muted);line-height:1.65;}
+    .showcase-copy{padding:2rem;}
+    .showcase-copy h3{font-family:'Syne';font-weight:800;font-size:1.6rem;margin-bottom:.9rem;}
+    .showcase-copy p{color:var(--muted);line-height:1.8;font-size:.95rem;}
+    /* INDUSTRIES */
+    .industries-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+    .ind-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s;}
+    .ind-card:hover{border-color:rgba(240,165,0,.3);background:rgba(240,165,0,.04);}
+    .ind-icon{font-size:2rem;margin-bottom:.7rem;}
+    .ind-name{font-weight:700;font-size:.88rem;margin-bottom:.3rem;}
+    .ind-desc{font-size:.76rem;color:var(--muted);line-height:1.5;}
+    /* CTA */
+    #cta-banner{padding:5rem 4rem;position:relative;z-index:1;}
+    .cta-inner{border-radius:20px;background:linear-gradient(135deg,rgba(240,165,0,.08),rgba(123,94,167,.05));border:1px solid rgba(240,165,0,.15);padding:4rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;position:relative;overflow:hidden;}
+    .cta-inner::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(240,165,0,.08),transparent 70%);}
+    .cta-text h2{font-size:2rem;}
+    .cta-text p{color:var(--muted);margin-top:.5rem;max-width:480px;line-height:1.7;}
+    .cta-buttons{display:flex;gap:1rem;flex-shrink:0;flex-wrap:wrap;}
+    .btn-primary{padding:.8rem 1.9rem;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 0 30px rgba(0,212,255,.2);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,212,255,.4);}
+    /* CONTACT */
+    #contact{padding:7rem 4rem;position:relative;z-index:1;}
+    .contact-wrap{max-width:920px;margin:0 auto;display:grid;grid-template-columns:120px 1fr;gap:3rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4rem;position:relative;overflow:hidden;}
+    .contact-wrap::before{content:'';position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(240,165,0,.06),transparent 70%);pointer-events:none;}
+    .contact-info h2{font-size:1.9rem;margin-bottom:.8rem;}
+    .contact-info p{color:var(--muted);line-height:1.8;margin-bottom:1.8rem;}
+    .contact-items{display:flex;flex-direction:column;gap:1.1rem;}
+    .ci{display:flex;align-items:flex-start;gap:.9rem;}
+    .ci-icon{width:38px;height:38px;border-radius:8px;flex-shrink:0;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.15);display:grid;place-items:center;font-size:.95rem;}
+    .ci-text p:first-child{font-weight:600;font-size:.88rem;}
+    .ci-text p:last-child{color:var(--muted);font-size:.82rem;}
+    .contact-form{display:flex;flex-direction:column;gap:1.1rem;}
+    .fg{display:flex;flex-direction:column;gap:.35rem;}
+    .fg label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+    .fg input,.fg textarea,.fg select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'DM Sans';font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;-webkit-appearance:none;}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,165,0,.1);}
+    .fg textarea{resize:vertical;min-height:90px;}
+    .fg select option{background:var(--surface);}
+    .btn-submit{padding:.82rem;border-radius:8px;border:none;background:linear-gradient(135deg,var(--gold),#e07b00);color:#fff;font-family:'Syne';font-weight:700;font-size:.92rem;cursor:pointer;transition:all .3s;box-shadow:0 0 25px rgba(240,165,0,.2);}
+    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(240,165,0,.4);}
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+    .ft-right{display:flex;gap:2rem;}
+    .ft-right a{color:var(--muted);font-size:.82rem;text-decoration:none;transition:color .3s;}
+    .ft-right a:hover{color:var(--gold);}
+    .ft-tag{font-size:.78rem;color:var(--muted);margin-top:.3rem;}
+    @media(max-width:1024px){
+      nav{padding:.9rem 2rem;}
+      .nav-links{display:none;}
+      #page-hero{padding:8rem 2rem 4rem;}
+      section.content-section,#cta-banner,#contact{padding:5rem 1.5rem;}
+      .tembo-block,.cat-grid,.industries-grid{grid-template-columns:1fr;}
+      .industries-grid{grid-template-columns:1fr 1fr;}
+      .cta-inner{flex-direction:column;}
+      .contact-wrap{grid-template-columns:1fr;gap:2.5rem;padding:2.5rem;}
+      .section-divider{margin:0 1.5rem;}
+      footer{flex-direction:column;gap:1.2rem;text-align:center;padding:2rem;}
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
+
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="amss.jpg" alt="AMSS Logo" class="logo-image">
+      <span class="logo-text"><span>AMSS</span> Solutions</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="architectural.html">Architectural</a></li>
+      <li><a href="mechanical.html" class="active">Mechanical</a></li>
+      <li><a href="software.html">Software</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section id="page-hero">
+    <div class="ph-grid"></div>
+    <div class="ph-glow pg1"></div>
+    <div class="ph-glow pg2"></div>
+    <div class="ph-tag">M — Mechanical Division</div>
+    <h1 class="ph-title">Piping Solutions<br/>Built for <span>The Best</span></h1>
+    <p class="ph-desc">Welcome to our mechanical solutions hub! Discover expertly crafted pipe fittings and hangers designed for durability and precision. From industrial to residential projects, Our work ensures reliable, high-quality systems tailored to your needs. Explore innovative solutions built to last.</p>
+    <div class="ph-btns">
+      <a href="#products" class="btn-gold">Explore Products →</a>
+      <a href="#contact" class="btn-ghost">Request a Quote</a>
+    </div>
+  </section>
+
+  <!-- TEMBO PARTNERSHIP -->
+  <section class="content-section" id="about">
+    <div class="tembo-block">
+      <div class="reveal">
+        <div class="section-tag">our partnerships</div>
+        <h2>Authorized Channel Partner of Tembo Global Industries</h2>
+        <p style="color:var(--muted);line-height:1.8;margin-top:1rem">Tembo Global Industries is a leading pipe support systems manufacturer and an industrial powerhouse with a dominant presence in the manufacturing and fabrication of metal products, including fasteners, anchors, HVAC solutions, anti-vibration systems, and specialized equipment for industrial, commercial, utility, and OEM installations.</p>
+        <p style="color:var(--muted);line-height:1.8;margin-top:.8rem">At AMS Solutions, we provide a wide selection of high-quality products from Tembo Global Industries, a leading manufacturer in metal engineering and fabrication. Our offerings include Tembo's premium pipe support systems, fasteners, anchors, HVAC anti-vibration systems, and customized metal fabrications.</p>
+
+        <div class="tembo-badge-large">⚙️ Authorized Channel Partner — Tembo Global Industries Ltd.</div>
+        <div class="cert-badges">
+          <span class="cert">UL Listed</span>
+          <span class="cert">FM Approved</span>
+          <span class="cert">ISO 9001 Certified</span>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:1.5rem">
+        <div class="showcase-card" style="width:100%;margin:0">
+          <img src="m1.jpeg" alt="Tembo Global Industries product range"/>
+        </div>
+        <div style="text-align:center;width:100%">
+          <p style="color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:1rem">Our Complete Product Range</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center">
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">U Bolts</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">U Clamps</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">MS Pipe Fittings</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Pipe Hangers</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Strut Channel</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Wall Brackets</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Fasteners</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Swivel Clamps</span>
+            <span style="padding:.4rem .9rem;border-radius:6px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.2);font-size:.8rem;color:var(--gold);font-weight:600">Teflon Tape</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- PRODUCTS WE SELL -->
+  <section class="content-section">
+    <div style="margin-bottom:2.5rem" class="reveal">
+      <div class="section-tag">Featured Products</div>
+      <h2>Some of the items we sell</h2>
+      <p style="color:var(--muted);margin-top:.8rem;max-width:660px;line-height:1.75">Premium quality industrial and mechanical components supplied by Tembo Global Industries. Each product is engineered for durability, reliability, and performance in demanding environments.</p>
+    </div>
+    <div class="product-grid">
+      <div class="product-item reveal">
+        <div class="product-image"><img src="u bolt.jfif" alt="U Bolts"/></div>
+        <div class="product-info">
+          <div class="product-name">U Bolts</div>
+          <p class="product-desc">High-strength U-shaped bolts for securing pipes, cables, and equipment to structural supports. Used in MEP systems, HVAC installations, and industrial piping.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-1">
+        <div class="product-image"><img src="u clamp.jfif" alt="U Clamps"/></div>
+        <div class="product-info">
+          <div class="product-name">U Clamps</div>
+          <p class="product-desc">Versatile pipe clamps for suspending and supporting piping systems. Available in various sizes for liquid, gas, and steam lines.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="ms pipe fittings.jfif" alt="MS Pipe Fittings"/></div>
+        <div class="product-info">
+          <div class="product-name">MS Pipe Fittings</div>
+          <p class="product-desc">Mild steel pipe fittings including elbows, tees, reducers, and couplings for industrial and construction applications.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-1">
+        <div class="product-image"><img src="pipe hangers.jfif" alt="Pipe Hangers"/></div>
+        <div class="product-info">
+          <div class="product-name">Pipe Hangers</div>
+          <p class="product-desc">UL & FM approved pipe supports for fire sprinkler systems, HVAC, and industrial piping. Engineered for safety and longevity.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="strut channel.jfif" alt="Strut Channel"/></div>
+        <div class="product-info">
+          <div class="product-name">Strut Channel</div>
+          <p class="product-desc">Open-web structural framing for flexible support systems. Used for equipment mounting, cable tray support, and MEP installations.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-3">
+        <div class="product-image"><img src="wall bracket.jfif" alt="Wall Brackets"/></div>
+        <div class="product-info">
+          <div class="product-name">Wall Brackets</div>
+          <p class="product-desc">Heavy-duty wall-mounted brackets for pipe and equipment support. Ideal for plumbing, electrical, and HVAC routing.</p>
+        </div>
+      </div>
+      <div class="product-item reveal">
+        <div class="product-image"><img src="nut bolt washer.jpg" alt="Nut Bolt Washer"/></div>
+        <div class="product-info">
+          <div class="product-name">Nut, Bolt & Washer</div>
+          <p class="product-desc">Complete fastening solutions including hex bolts, nuts, lock washers, and flat washers in various grades and sizes.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-1">
+        <div class="product-image"><img src="swivel clamp.jpeg" alt="Swivel Clamp"/></div>
+        <div class="product-info">
+          <div class="product-name">Swivel Clamp</div>
+          <p class="product-desc">Adjustable swivel pipe clamps allowing flexible pipe positioning. Perfect for tight spaces and complex routing requirements.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="teflon tape.jfif" alt="Teflon Tape"/></div>
+        <div class="product-info">
+          <div class="product-name">Teflon Tape</div>
+          <p class="product-desc">PTFE thread seal tape for leak-free pipe connections. Essential for plumbing, gas lines, and high-pressure systems.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="J bolts 2.jfif" alt="J Bolts"/></div>
+        <div class="product-info">
+          <div class="product-name">J Bolts</div>
+          <p class="product-desc">J bolts are curved metal fasteners with threading, commonly used to anchor structures into concrete.</p>
+        </div>
+      </div>
+    
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="j bolts.jfif" alt="J Bolts"/></div>
+        <div class="product-info">
+          <div class="product-name">P Bolts</div>
+          <p class="product-desc">P bolts feature a closed loop head, commonly used to securely hang pipes or cables.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="threaded rods.jfif" alt="Threaded Rods"/></div>
+        <div class="product-info">
+          <div class="product-name">Threaded Rods</div>
+          <p class="product-desc">Threaded rods are long, fully threaded metal fasteners used to connect materials under high tension.</p>
+        </div>
+      </div>
+      <div class="product-item reveal reveal-delay-2">
+        <div class="product-image"><img src="square u bolts.jfif" alt="Square U Bolts"/></div>
+        <div class="product-info">
+          <div class="product-name">Square U Bolts</div>
+          <p class="product-desc">Square U bolts have a flat bottom, designed perfectly to clamp around square metal tubing.</p>
+        </div>
+      </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CTA BANNER -->
+  <section id="cta-banner">
+    <div class="cta-inner reveal">
+      <div class="cta-text">
+        <h2>Need a Specific Product or Custom Specification?</h2>
+        <p>Our team can help you identify the right product for your project requirements — including custom sizes and special materials. Get in touch with a product enquiry today.</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="#contact" class="btn-gold">Get a Quote →</a>
+        <a href="index.html" class="btn-ghost">Back to Home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-wrap reveal">
+      <div class="contact-logo">
+        <img src="amss.jpg" alt="AMSS Logo" style="width:100px;height:100px;object-fit:contain;border-radius:12px;"/>
+      </div>
+      <div class="contact-info">
+        <div class="section-tag">Product Enquiry</div>
+        <h2>Get Certified Piping Products</h2>
+        <p>Contact our mechanical division for product availability, pricing, lead times, and technical datasheets. We serve contractors, engineers, and procurement teams.</p>
+        <div class="contact-items">
+          <div class="ci"><div class="ci-icon">📧</div><div class="ci-text"><p>Email</p><p>sales@amssolutions.co.in</p></div></div>
+          <div class="ci"><div class="ci-icon">📞</div><div class="ci-text"><p>Phone</p><p>+91 98213 67617 | +91 75693 29819</p></div></div>
+          <div class="ci"><div class="ci-icon">📍</div><div class="ci-text"><p>Location</p><p>ground floor, 4-4-66/1, gunj bazaar, behind mahakali police station, Old Gudi, Old Bhoiguda, Rani Gunj, Secunderabad, Telangana 500015</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="nav-logo" style="pointer-events:none">
+        <div class="logo-badge">AMS</div>
+        <span class="logo-text"><span>AMS</span> Solutions</span>
+      </div>
+      <div class="ft-tag">Architectural · Mechanical · Software — Hyderabad, India</div>
+    </div>
+    <div class="ft-right">
+      <a href="index.html">Home</a>
+      <a href="architectural.html">Architectural</a>
+      <a href="mechanical.html">Mechanical</a>
+      <a href="software.html">Software</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),trail=document.getElementById('cursor-trail');
+    let mx=0,my=0,tx=0,ty=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function at(){tx+=(mx-tx)*.12;ty+=(my-ty)*.12;trail.style.left=tx+'px';trail.style.top=ty+'px';requestAnimationFrame(at);})();
+    document.querySelectorAll('a,button,.cat-card,.ind-card,.tv-item').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';trail.style.transform='translate(-50%,-50%) scale(1.5)';});
+      el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';trail.style.transform='translate(-50%,-50%) scale(1)';});
+    });
+    const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.1});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    window.addEventListener('scroll',()=>{document.getElementById('navbar').style.padding=window.scrollY>50?'.7rem 4rem':'1.1rem 4rem';});
+
+  </script>
+</body>
+</html>

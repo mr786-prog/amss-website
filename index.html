@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AMS Solutions – Architectural · Mechanical · Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#050810;--surface:#0b0f1e;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--accent:#00d4ff;--accent2:#7b5ea7;--gold:#f0a500;--text:#e8edf8;--muted:#7a8499;--arch:#00d4ff;--mech:#f0a500;--soft:#7b5ea7;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+    #cursor,#cursor-trail{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;}
+    #cursor{width:12px;height:12px;background:var(--accent);top:0;left:0;transform:translate(-50%,-50%);transition:transform .15s ease;}
+    #cursor-trail{width:36px;height:36px;border:1.5px solid rgba(0,212,255,.4);top:0;left:0;transform:translate(-50%,-50%);transition:all .3s ease;}
+    /* NAV */
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(5,8,16,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .4s;}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;}
+    .logo-badge{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-family:'Bebas Neue';font-size:1.2rem;color:#fff;box-shadow:0 0 20px rgba(0,212,255,.3);}
+    .logo-image{width:48px;height:48px;border-radius:12px;object-fit:contain;box-shadow:0 0 20px rgba(0,212,255,.24);}
+    .logo-text{font-family:'Syne';font-weight:800;font-size:1.15rem;letter-spacing:.04em;}
+    .logo-text span{color:var(--accent);}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{text-decoration:none;color:var(--muted);font-size:.82rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:color .3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--accent);transition:width .3s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active{color:var(--accent);}
+    .nav-links a.active::after{width:100%;}
+    .nav-cta{padding:.5rem 1.3rem;border-radius:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:.8rem;letter-spacing:.05em;text-decoration:none;transition:all .3s;box-shadow:0 0 20px rgba(0,212,255,.2);}
+    .nav-cta:hover{box-shadow:0 0 40px rgba(0,212,255,.5);transform:translateY(-2px);}
+    /* HERO */
+    #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+    .hero-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);}
+    .glow{position:absolute;z-index:0;border-radius:50%;filter:blur(110px);pointer-events:none;}
+    .g1{width:600px;height:600px;background:rgba(0,212,255,.08);top:-120px;left:-120px;animation:f1 9s ease-in-out infinite;}
+    .g2{width:500px;height:500px;background:rgba(123,94,167,.1);bottom:-60px;right:-60px;animation:f2 11s ease-in-out infinite;}
+    .g3{width:320px;height:320px;background:rgba(240,165,0,.05);top:45%;left:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;}
+    @keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,35px)}}
+    @keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-45px)}}
+    @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+    .hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;border-radius:100px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1.6rem;animation:fadeDown .8s ease both;}
+    .blink{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 1.6s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+    .hero-title{position:relative;z-index:1;font-family:'Bebas Neue';font-size:clamp(4.5rem,13vw,11rem);line-height:.92;letter-spacing:.02em;animation:fadeUp .9s ease .1s both;}
+    .a{color:var(--arch);text-shadow:0 0 80px rgba(0,212,255,.45);}
+    .m{color:var(--mech);text-shadow:0 0 80px rgba(240,165,0,.45);}
+    .s{color:var(--soft);text-shadow:0 0 80px rgba(123,94,167,.45);}
+    .hero-sub{position:relative;z-index:1;font-family:'Syne';font-size:clamp(.85rem,1.8vw,1.05rem);font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-top:.6rem;animation:fadeUp .9s ease .22s both;}
+    .hero-desc{position:relative;z-index:1;max-width:560px;margin:1.6rem auto 0;font-size:1rem;line-height:1.8;color:var(--muted);animation:fadeUp .9s ease .33s both;}
+    .hero-btns{position:relative;z-index:1;display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .9s ease .44s both;}
+    .btn-primary{padding:.8rem 1.9rem;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 0 30px rgba(0,212,255,.2);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,212,255,.4);}
+    .btn-ghost{padding:.8rem 1.9rem;border-radius:8px;border:1px solid var(--border);color:var(--text);font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;background:var(--glass);}
+    .btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05);}
+    .hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;animation:fadeUp 1s ease .8s both;}
+    .scroll-line{width:1px;height:40px;background:linear-gradient(var(--accent),transparent);animation:scrollDown 2s ease-in-out infinite;}
+    @keyframes scrollDown{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+    /* DIVISION CARDS */
+    #divisions{padding:7rem 4rem;position:relative;z-index:1;}
+    .div-header{text-align:center;margin-bottom:3.5rem;}
+    .section-tag{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem;}
+    .section-tag::before{content:'';width:18px;height:1.5px;background:var(--accent);}
+    h2{font-family:'Syne';font-weight:800;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.1;}
+    .div-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);}
+    .div-card{background:var(--surface);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:all .4s;cursor:pointer;}
+    .div-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:opacity .4s;}
+    .div-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.03),transparent 70%);opacity:0;transition:opacity .4s;}
+    .dc-arch::before{background:linear-gradient(90deg,var(--arch),transparent);}
+    .dc-mech::before{background:linear-gradient(90deg,var(--mech),transparent);}
+    .dc-soft::before{background:linear-gradient(90deg,var(--soft),transparent);}
+    .div-card:hover{background:#0f1428;transform:translateY(-5px);box-shadow:0 25px 70px rgba(0,0,0,.5);}
+    .div-card:hover::after{opacity:1;}
+    .div-icon{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;margin-bottom:1.5rem;position:relative;z-index:1;}
+    .icon-arch{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);}
+    .icon-mech{background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.2);}
+    .icon-soft{background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.2);}
+    .div-label{font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.4rem;position:relative;z-index:1;}
+    .label-arch{color:var(--arch);}
+    .label-mech{color:var(--mech);}
+    .label-soft{color:var(--soft);}
+    .div-title{font-family:'Syne';font-size:1.5rem;font-weight:800;margin-bottom:.9rem;position:relative;z-index:1;}
+    .div-desc{color:var(--muted);line-height:1.75;font-size:.92rem;position:relative;z-index:1;margin-bottom:1.5rem;}
+    .div-link{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:gap .3s;}
+    .link-arch{color:var(--arch);}
+    .link-mech{color:var(--mech);}
+    .link-soft{color:var(--soft);}
+    .div-link:hover{gap:.7rem;}
+    /* WHY */
+    #why{padding:7rem 4rem;position:relative;z-index:1;background:linear-gradient(180deg,transparent,rgba(0,212,255,.015),transparent);}
+    .why-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:5rem;align-items:center;}
+    .why-left p{color:var(--muted);line-height:1.8;margin-top:1.2rem;}
+    .pillars{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .pillar{padding:1.8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface);transition:all .4s;}
+    .pillar:hover{border-color:var(--accent);background:rgba(0,212,255,.04);}
+    .pillar-num{font-family:'Bebas Neue';font-size:2.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:.4rem;}
+    .pillar h4{font-family:'Syne';font-weight:700;font-size:.92rem;margin-bottom:.35rem;}
+    .pillar p{font-size:.82rem;color:var(--muted);line-height:1.65;}
+    /* CONTACT */
+    #contact{padding:7rem 4rem;position:relative;z-index:1;}
+    .contact-wrap{max-width:920px;margin:0 auto;display:grid;grid-template-columns:120px 1fr;gap:3rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4rem;position:relative;overflow:hidden;}
+    .contact-wrap::before{content:'';position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.06),transparent 70%);pointer-events:none;}
+    .contact-info h2{font-size:1.9rem;margin-bottom:.8rem;}
+    .contact-info p{color:var(--muted);line-height:1.8;margin-bottom:1.8rem;}
+    .contact-items{display:flex;flex-direction:column;gap:1.1rem;}
+    .ci{display:flex;align-items:flex-start;gap:.9rem;}
+    .ci-icon{width:38px;height:38px;border-radius:8px;flex-shrink:0;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);display:grid;place-items:center;font-size:.95rem;}
+    .ci-text p:first-child{font-weight:600;font-size:.88rem;}
+    .ci-text p:last-child{color:var(--muted);font-size:.82rem;}
+    .contact-form{display:flex;flex-direction:column;gap:1.1rem;}
+    .fg{display:flex;flex-direction:column;gap:.35rem;}
+    .fg label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+    .fg input,.fg textarea,.fg select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'DM Sans';font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;-webkit-appearance:none;}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.1);}
+    .fg textarea{resize:vertical;min-height:90px;}
+    .fg select option{background:var(--surface);}
+    .btn-submit{padding:.82rem;border-radius:8px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:'Syne';font-weight:700;font-size:.92rem;cursor:pointer;transition:all .3s;box-shadow:0 0 25px rgba(0,212,255,.2);}
+    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(0,212,255,.4);}
+    /* FOOTER */
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+    .ft-right{display:flex;gap:2rem;}
+    .ft-right a{color:var(--muted);font-size:.82rem;text-decoration:none;transition:color .3s;}
+    .ft-right a:hover{color:var(--accent);}
+    .ft-tag{font-size:.78rem;color:var(--muted);margin-top:.3rem;}
+    .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 4rem;}
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:.1s;}
+    .reveal-delay-2{transition-delay:.2s;}
+    .reveal-delay-3{transition-delay:.3s;}
+    .reveal-delay-4{transition-delay:.4s;}
+    @media(max-width:1024px){
+      nav{padding:.9rem 2rem;}
+      .nav-links{display:none;}
+      #divisions,#why,#contact{padding:5rem 1.5rem;}
+      .div-grid,.why-grid{grid-template-columns:1fr;}
+      .contact-wrap{grid-template-columns:1fr;gap:2.5rem;padding:2.5rem;}
+      .section-divider{margin:0 1.5rem;}
+      footer{flex-direction:column;gap:1.2rem;text-align:center;padding:2rem;}
+    }
+    @media(max-width:640px){.pillars{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
+
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="amss.jpg" alt="AMSS Logo" class="logo-image">
+      <span class="logo-text"><span>AMS</span> Solutions</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="architectural.html">Architectural</a></li>
+      <li><a href="mechanical.html">Mechanical</a></li>
+      <li><a href="software.html">Software</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-grid"></div>
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+    <div class="hero-badge"><span class="blink"></span>Your Complete Solutions Partner</div>
+    <h1 class="hero-title"><span class="a">A</span><span class="m">M</span><span class="s">S</span><br/>Solutions</h1>
+    <p class="hero-sub">Architectural &nbsp;·&nbsp; Mechanical &nbsp;·&nbsp; Software</p>
+    <p class="hero-desc">One company — three powerhouse divisions delivering precision 3D architectural visualization, certified industrial piping solutions, and world-class design software to forward-thinking businesses.</p>
+    <div class="hero-btns">
+      <a href="#divisions" class="btn-primary">Explore Our Divisions →</a>
+      <a href="#contact" class="btn-ghost">Request a Quote</a>
+    </div>
+    <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
+  </section>
+
+  <!-- DIVISIONS -->
+  <section id="divisions">
+    <div class="div-header reveal">
+      <div class="section-tag">Our Divisions</div>
+      <h2>Three Specializations.<br/>One Trusted Partner.</h2>
+    </div>
+    <div class="div-grid">
+      <div class="div-card dc-arch reveal">
+        <div class="div-icon icon-arch">🏛️</div>
+        <div class="div-label label-arch">A — Architectural</div>
+        <h3 class="div-title">Designing the Extraordinary</h3>
+        <p class="div-desc">Experience a seamless fusion of engineering precision and artistic design, creating stunning architectural spaces that reflect your unique style and vision.</p>
+        <a href="architectural.html" class="div-link link-arch">Explore Division →</a>
+      </div>
+      <div class="div-card dc-mech reveal reveal-delay-1">
+        <div class="div-icon icon-mech">⚙️</div>
+        <div class="div-label label-mech">M — Mechanical</div>
+        <h3 class="div-title">Pipe Fittings, Hangers & Industrial Supports</h3>
+        <p class="div-desc">As the authorized channel partner of Tembo Global Industries — India's first UL & FM certified pipe support manufacturer — we supply premium fasteners, hangers, and industrial piping components for MEP, HVAC, fire fighting, and oil & gas applications.</p>
+        <a href="mechanical.html" class="div-link link-mech">Explore Division →</a>
+      </div>
+      <div class="div-card dc-soft reveal reveal-delay-2">
+        <div class="div-icon icon-soft">💻</div>
+        <div class="div-label label-soft">S — Software</div>
+        <h3 class="div-title">Design Software Licensing & Support</h3>
+        <p class="div-desc">We are authorized resellers of the industry's most powerful design, rendering, and productivity software — from CAD drafting tools to real-time visualization engines and enterprise productivity suites, backed by expert support and training.</p>
+        <a href="software.html" class="div-link link-soft">Explore Division →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- WHY US -->
+  <section id="why">
+    <div class="why-grid">
+      <div class="why-left reveal">
+        <div class="section-tag">Why AMS Solutions</div>
+        <h2>Built on Expertise.<br/>Powered by Partnership.</h2>
+        <p>We are not just a vendor — we are your long-term solutions partner. Our team brings domain expertise across architecture, industrial engineering, and software technology to deliver outcomes that matter. At AMS Solutions, every engagement is backed by genuine product authorization, technical know-how, and a commitment to your success.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar reveal">
+          <div class="pillar-num">01</div>
+          <h4>Authorized Partnerships</h4>
+          <p>Genuine licenses and certified channel partner status ensure you always receive authentic products with full manufacturer warranty and compliance.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-1">
+          <div class="pillar-num">02</div>
+          <h4>Multi-Domain Expertise</h4>
+          <p>A unique combination of architectural, mechanical, and software competencies under one roof saves you time, cost, and coordination overhead.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-2">
+          <div class="pillar-num">03</div>
+          <h4>End-to-End Support</h4>
+          <p>From procurement to installation, licensing  — our team is with you at every stage with responsive, expert-level support.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-3">
+          <div class="pillar-num">04</div>
+          <h4>Quality Assurance</h4>
+          <p>We partner only with internationally certified manufacturers and software publishers to ensure every product meets the highest global standards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-wrap reveal">
+      <div class="contact-logo">
+        <img src="amss.jpg" alt="AMSS Logo" style="width:100px;height:100px;object-fit:contain;border-radius:12px;"/>
+      </div>
+      <div class="contact-info">
+        <div class="section-tag">Contact Us</div>
+        <h2>Let's Build Something Great Together</h2>
+        <p>Whether you need a 3D visualization, industrial piping products, or the right software license — our team is ready to help you find the best solution.</p>
+        <div class="contact-items">
+          <div class="ci"><div class="ci-icon">📧</div><div class="ci-text"><p>Email</p><p>sales@amssolutions.co.in</p></div></div>
+          <div class="ci"><div class="ci-icon">📞</div><div class="ci-text"><p>Phone</p><p>+91 98213 67617 / +91 75693 29819</p></div></div>
+          <div class="ci"><div class="ci-icon">📍</div><div class="ci-text"><p>Location</p><p>ground floor, 4-4-66/1, gunj bazaar, behind mahakali police station, Old Gudi, Old Bhoiguda, Rani Gunj, Secunderabad, Telangana 500015</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="nav-logo" style="pointer-events:none">
+        <div class="logo-badge">AMS</div>
+        <span class="logo-text"><span>AMS</span> Solutions</span>
+      </div>
+      <div class="ft-tag">Architectural · Mechanical · Software — Hyderabad, India</div>
+    </div>
+    <div class="ft-right">
+      <a href="index.html">Home</a>
+      <a href="architectural.html">Architectural</a>
+      <a href="mechanical.html">Mechanical</a>
+      <a href="software.html">Software</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),trail=document.getElementById('cursor-trail');
+    let mx=0,my=0,tx=0,ty=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function at(){tx+=(mx-tx)*.12;ty+=(my-ty)*.12;trail.style.left=tx+'px';trail.style.top=ty+'px';requestAnimationFrame(at);})();
+    document.querySelectorAll('a,button,.div-card,.pillar').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';trail.style.transform='translate(-50%,-50%) scale(1.5)';});
+      el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';trail.style.transform='translate(-50%,-50%) scale(1)';});
+    });
+    const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.1});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    window.addEventListener('scroll',()=>{document.getElementById('navbar').style.padding=window.scrollY>50?'.7rem 4rem':'1.1rem 4rem';});
+  </script>
+</body>
+</html>

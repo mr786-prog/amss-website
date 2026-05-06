@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Software Division – AMS Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#050810;--surface:#0b0f1e;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--accent:#00d4ff;--accent2:#7b5ea7;--gold:#f0a500;--text:#e8edf8;--muted:#7a8499;--soft:#7b5ea7;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+    #cursor,#cursor-trail{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;}
+    #cursor{width:12px;height:12px;background:var(--soft);top:0;left:0;transform:translate(-50%,-50%);transition:transform .15s ease;}
+    #cursor-trail{width:36px;height:36px;border:1.5px solid rgba(123,94,167,.5);top:0;left:0;transform:translate(-50%,-50%);transition:all .3s ease;}
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(5,8,16,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .4s;}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none;}
+    .logo-badge{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-family:'Bebas Neue';font-size:1.2rem;color:#fff;box-shadow:0 0 20px rgba(0,212,255,.3);}
+    .logo-image{width:48px;height:48px;border-radius:12px;object-fit:contain;box-shadow:0 0 20px rgba(0,212,255,.24);}
+    .logo-text{font-family:'Syne';font-weight:800;font-size:1.15rem;letter-spacing:.04em;}
+    .logo-text span{color:var(--accent);}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{text-decoration:none;color:var(--muted);font-size:.82rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:color .3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--soft);transition:width .3s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-links a:hover::after{width:100%;}
+    .nav-links a.active{color:var(--soft);}
+    .nav-links a.active::after{width:100%;background:var(--soft);}
+    .nav-cta{padding:.5rem 1.3rem;border-radius:6px;background:linear-gradient(135deg,var(--soft),#5a3f8a);color:#fff;font-weight:700;font-size:.8rem;letter-spacing:.05em;text-decoration:none;transition:all .3s;box-shadow:0 0 20px rgba(123,94,167,.2);}
+    .nav-cta:hover{box-shadow:0 0 40px rgba(123,94,167,.5);transform:translateY(-2px);}
+    /* PAGE HERO */
+    #page-hero{min-height:72vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:10rem 4rem 5rem;position:relative;overflow:hidden;}
+    .ph-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(123,94,167,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(123,94,167,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 90% at 30% 50%,black 20%,transparent 100%);}
+    .ph-glow{position:absolute;z-index:0;border-radius:50%;filter:blur(120px);pointer-events:none;}
+    .pg1{width:700px;height:700px;background:rgba(123,94,167,.08);top:-150px;right:-100px;animation:fp1 10s ease-in-out infinite;}
+    .pg2{width:400px;height:400px;background:rgba(0,212,255,.05);bottom:-50px;left:200px;animation:fp2 12s ease-in-out infinite;}
+    @keyframes fp1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+    @keyframes fp2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-20px)}}
+    .ph-tag{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;border-radius:100px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.25);font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:1.3rem;animation:fadeUp .7s ease both;}
+    .ph-title{position:relative;z-index:1;font-family:'Bebas Neue';font-size:clamp(3.5rem,9vw,7.5rem);line-height:.95;color:#fff;animation:fadeUp .8s ease .1s both;}
+    .ph-title span{color:var(--soft);text-shadow:0 0 60px rgba(123,94,167,.6);}
+    .ph-desc{position:relative;z-index:1;max-width:600px;margin-top:1.3rem;font-size:1.02rem;line-height:1.8;color:var(--muted);animation:fadeUp .8s ease .2s both;}
+    .ph-btns{position:relative;z-index:1;display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;animation:fadeUp .8s ease .3s both;}
+    .btn-purple{padding:.8rem 1.9rem;border-radius:8px;background:linear-gradient(135deg,var(--soft),#5a3f8a);color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 0 30px rgba(123,94,167,.2);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-purple:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(123,94,167,.45);}
+    .btn-ghost{padding:.8rem 1.9rem;border-radius:8px;border:1px solid var(--border);color:var(--text);font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;background:var(--glass);}
+    .btn-ghost:hover{border-color:var(--soft);color:var(--soft);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    section.content-section{padding:7rem 4rem;position:relative;z-index:1;}
+    .section-tag{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);margin-bottom:.9rem;}
+    .section-tag::before{content:'';width:18px;height:1.5px;background:var(--soft);}
+    h2{font-family:'Syne';font-weight:800;font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.1;}
+    .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 4rem;}
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:.1s;}
+    .reveal-delay-2{transition-delay:.2s;}
+    .reveal-delay-3{transition-delay:.3s;}
+    /* CATEGORY TABS */
+    .sw-categories{display:flex;gap:1rem;margin-bottom:2.5rem;flex-wrap:wrap;}
+    .sw-cat-btn{padding:.5rem 1.2rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans';font-size:.8rem;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:all .3s;}
+    .sw-cat-btn.active,.sw-cat-btn:hover{border-color:var(--soft);background:rgba(123,94,167,.08);color:var(--soft);}
+    /* SOFTWARE CARDS */
+    .sw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .sw-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;position:relative;overflow:hidden;transition:all .4s;cursor:default;}
+    .sw-card::before{content:'';position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 0%,rgba(123,94,167,.1),transparent 70%);transition:opacity .4s;}
+    .sw-card:hover{border-color:rgba(123,94,167,.4);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.4);}
+    .sw-card:hover::before{opacity:1;}
+    .sw-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;}
+    .sw-icon{font-size:2.2rem;}
+    .sw-badge-cat{padding:.25rem .7rem;border-radius:100px;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.2);font-size:.68rem;font-weight:700;color:var(--soft);letter-spacing:.08em;text-transform:uppercase;}
+    .sw-name{font-family:'Syne';font-weight:800;font-size:1.1rem;margin-bottom:.25rem;}
+    .sw-tagline{font-size:.78rem;color:var(--soft);font-weight:600;margin-bottom:.7rem;}
+    .sw-desc{font-size:.84rem;color:var(--muted);line-height:1.7;}
+    .sw-features{margin-top:1rem;list-style:none;display:flex;flex-direction:column;gap:.25rem;}
+    .sw-features li{font-size:.78rem;color:var(--muted);padding-left:1rem;position:relative;}
+    .sw-features li::before{content:'✦';position:absolute;left:0;color:var(--soft);font-size:.55rem;top:.15rem;}
+    /* WHY BUY FROM US */
+    .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .why-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.8rem;transition:all .3s;}
+    .why-card:hover{border-color:rgba(123,94,167,.3);}
+    .wc-icon{font-size:1.6rem;margin-bottom:.8rem;}
+    .wc-title{font-family:'Syne';font-weight:700;font-size:.95rem;margin-bottom:.4rem;}
+    .wc-desc{font-size:.83rem;color:var(--muted);line-height:1.65;}
+    /* CTA */
+    #cta-banner{padding:5rem 4rem;position:relative;z-index:1;}
+    .cta-inner{border-radius:20px;background:linear-gradient(135deg,rgba(123,94,167,.08),rgba(0,212,255,.05));border:1px solid rgba(123,94,167,.15);padding:4rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;position:relative;overflow:hidden;}
+    .cta-inner::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(123,94,167,.1),transparent 70%);}
+    .cta-text h2{font-size:2rem;}
+    .cta-text p{color:var(--muted);margin-top:.5rem;max-width:480px;line-height:1.7;}
+    .cta-buttons{display:flex;gap:1rem;flex-shrink:0;flex-wrap:wrap;}
+    .btn-primary{padding:.8rem 1.9rem;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 0 30px rgba(0,212,255,.2);transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,212,255,.4);}
+    /* CONTACT */
+    #contact{padding:7rem 4rem;position:relative;z-index:1;}
+    .contact-wrap{max-width:920px;margin:0 auto;display:grid;grid-template-columns:120px 1fr;gap:3rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4rem;position:relative;overflow:hidden;}
+    .contact-wrap::before{content:'';position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(123,94,167,.08),transparent 70%);pointer-events:none;}
+    .contact-info h2{font-size:1.9rem;margin-bottom:.8rem;}
+    .contact-info p{color:var(--muted);line-height:1.8;margin-bottom:1.8rem;}
+    .contact-items{display:flex;flex-direction:column;gap:1.1rem;}
+    .ci{display:flex;align-items:flex-start;gap:.9rem;}
+    .ci-icon{width:38px;height:38px;border-radius:8px;flex-shrink:0;background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.2);display:grid;place-items:center;font-size:.95rem;}
+    .ci-text p:first-child{font-weight:600;font-size:.88rem;}
+    .ci-text p:last-child{color:var(--muted);font-size:.82rem;}
+    .contact-form{display:flex;flex-direction:column;gap:1.1rem;}
+    .fg{display:flex;flex-direction:column;gap:.35rem;}
+    .fg label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+    .fg input,.fg textarea,.fg select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'DM Sans';font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;-webkit-appearance:none;}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--soft);box-shadow:0 0 0 3px rgba(123,94,167,.12);}
+    .fg textarea{resize:vertical;min-height:90px;}
+    .fg select option{background:var(--surface);}
+    .btn-submit{padding:.82rem;border-radius:8px;border:none;background:linear-gradient(135deg,var(--soft),#5a3f8a);color:#fff;font-family:'Syne';font-weight:700;font-size:.92rem;cursor:pointer;transition:all .3s;box-shadow:0 0 25px rgba(123,94,167,.2);}
+    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(123,94,167,.4);}
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+    .ft-right{display:flex;gap:2rem;}
+    .ft-right a{color:var(--muted);font-size:.82rem;text-decoration:none;transition:color .3s;}
+    .ft-right a:hover{color:var(--soft);}
+    .ft-tag{font-size:.78rem;color:var(--muted);margin-top:.3rem;}
+    @media(max-width:1024px){
+      nav{padding:.9rem 2rem;}
+      .nav-links{display:none;}
+      #page-hero{padding:8rem 2rem 4rem;}
+      section.content-section,#cta-banner,#contact{padding:5rem 1.5rem;}
+      .sw-grid,.why-grid{grid-template-columns:1fr;}
+      .cta-inner{flex-direction:column;}
+      .contact-wrap{grid-template-columns:1fr;gap:2.5rem;padding:2.5rem;}
+      .section-divider{margin:0 1.5rem;}
+      footer{flex-direction:column;gap:1.2rem;text-align:center;padding:2rem;}
+    }
+    @media(max-width:640px){.sw-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
+
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="amss.jpg" alt="AMSS Logo" class="logo-image">
+      <span class="logo-text"><span>AMSS</span> Solutions</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="architectural.html">Architectural</a></li>
+      <li><a href="mechanical.html">Mechanical</a></li>
+      <li><a href="software.html" class="active">Software</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section id="page-hero">
+    <div class="ph-grid"></div>
+    <div class="ph-glow pg1"></div>
+    <div class="ph-glow pg2"></div>
+    <div class="ph-tag">S — Software Division</div>
+    <h1 class="ph-title">Authorized Reseller of<br/><span>World-Class Design Software</span></h1>
+    <p class="ph-desc">AMS Solutions is your trusted source for genuine software licenses across CAD, 3D visualization, rendering, creative design, and enterprise productivity — covering 15 industry-leading titles with expert support, training, and competitive pricing.</p>
+    <div class="ph-btns">
+      <a href="#software-list" class="btn-purple">View All Software →</a>
+      <a href="#contact" class="btn-ghost">Request a License</a>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="content-section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+      <div class="reveal">
+        <div class="section-tag">Why Buy From AMS Solutions</div>
+        <h2>Genuine Licenses. Expert Guidance. Full Support.</h2>
+        <p style="color:var(--muted);line-height:1.8;margin-top:1rem">Purchasing software from an authorized reseller like AMS Solutions guarantees you receive genuine, registered licenses with full manufacturer support entitlements. We are not a grey-market supplier — every license we sell is fully traceable, transferable, and eligible for updates and upgrades.</p>
+        <p style="color:var(--muted);line-height:1.8;margin-top:.8rem">Our team uses many of the products we sell — particularly in our Architectural visualization practice — which means we can advise you on the right software for your specific workflow, budget, and team size, not just push a product for commission.</p>
+        <a href="#contact" class="btn-purple" style="margin-top:1.8rem">Speak to a Software Specialist →</a>
+      </div>
+      <div class="why-grid reveal reveal-delay-1" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <div class="why-card"><div class="wc-icon">✅</div><div class="wc-title">Genuine Licenses</div><div class="wc-desc">Every license is authentic, registered, and traceable through the publisher.</div></div>
+        <div class="why-card"><div class="wc-icon">🎓</div><div class="wc-title">Demo Included</div><div class="wc-desc">Demo sessions available for key software titles to understand thier key features.</div></div>
+        <div class="why-card"><div class="wc-icon">🔧</div><div class="wc-title">Installation Support</div><div class="wc-desc">We help you get up and running quickly with remote installation guidance.</div></div>
+        <div class="why-card"><div class="wc-icon">💰</div><div class="wc-title">Competitive Pricing</div><div class="wc-desc">Best-in-market pricing on perpetual and subscription licenses with flexible billing.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- SOFTWARE LIST -->
+  <section class="content-section" id="software-list">
+    <div style="margin-bottom:3rem" class="reveal">
+      <div class="section-tag">Our Software Portfolio</div>
+      <h2>15 Industry-Leading Titles</h2>
+      <p style="color:var(--muted);margin-top:.8rem;max-width:560px;line-height:1.75">From precision CAD drafting to photorealistic rendering engines, creative design suites to enterprise business software — we cover the full spectrum of professional design and productivity tools.</p>
+    </div>
+
+    <!-- CAD & BIM -->
+    <div style="margin-bottom:1rem" class="reveal"><h3 style="font-family:Syne;font-size:1rem;font-weight:700;color:var(--soft);letter-spacing:.12em;text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid var(--border)">CAD & Drafting</h3></div>
+    <div class="sw-grid" style="margin-bottom:3rem">
+      <div class="sw-card reveal">
+        <div class="sw-top"><img src="gstarcad logo.jfif" alt="GstarCAD" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">CAD</span></div>
+        <div class="sw-name">GstarCAD</div>
+        <div class="sw-tagline">Professional DWG-Compatible CAD Platform</div>
+        <div class="sw-desc">GstarCAD is a professional CAD software platform fully compatible with AutoCAD's DWG/DXF file formats. It offers a familiar workflow at a significantly lower cost, making it ideal for small to mid-size firms transitioning away from expensive subscriptions. It supports 2D drafting, 3D modeling, parametric drawing tools, and collaborative design workflows.</div>
+        <ul class="sw-features"><li>Full DWG/DXF compatibility</li><li>2D drafting and 3D modeling</li><li>Network license support</li><li>Perpetual license option available</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-1">
+        <div class="sw-top"><img src="autocad logo.png" alt="AutoCAD" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">CAD</span></div>
+        <div class="sw-name">AutoCAD</div>
+        <div class="sw-tagline">The Global Standard for 2D & 3D Design</div>
+        <div class="sw-desc">AutoCAD by Autodesk remains the most widely used CAD platform in the world. Used by architects, engineers, surveyors, and construction professionals for precise 2D drawing and 3D modeling, AutoCAD's extensive toolset, compatibility, and cloud collaboration features make it the industry benchmark for design documentation.</div>
+        <ul class="sw-features"><li>Industry-standard 2D/3D design</li><li>AutoCAD Toolsets for specialty disciplines</li><li>Autodesk cloud & web access</li><li>DWG compatibility across all versions</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-2">
+        <div class="sw-top"><img src="cadprofi logo.jpeg" alt="CADprofi" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">CAD Plugin</span></div>
+        <div class="sw-name">CADprofi</div>
+        <div class="sw-tagline">Specialized CAD Plugin for Engineering Design</div>
+        <div class="sw-desc">CADprofi is a professional plugin that works within AutoCAD, GstarCAD, and BricsCAD to dramatically speed up HVAC, plumbing, electrical, and structural design workflows. It provides intelligent symbol libraries, automatic calculations, and discipline-specific drawing tools used by MEP engineers worldwide.</div>
+        <ul class="sw-features"><li>HVAC, plumbing & electrical modules</li><li>Intelligent component libraries</li><li>Automatic BOM generation</li><li>Compatible with AutoCAD & GstarCAD</li></ul>
+      </div>
+    </div>
+
+    <!-- 3D & RENDERING -->
+    <div style="margin-bottom:1rem" class="reveal"><h3 style="font-family:Syne;font-size:1rem;font-weight:700;color:var(--soft);letter-spacing:.12em;text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid var(--border)">3D Modeling & Architectural Visualization</h3></div>
+    <div class="sw-grid" style="margin-bottom:3rem">
+      <div class="sw-card reveal">
+        <div class="sw-top"><img src="3ds max logo.jpg" alt="3DS Max" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">3D Modeling</span></div>
+        <div class="sw-name">3ds Max</div>
+        <div class="sw-tagline">Professional 3D Modeling & Animation by Autodesk</div>
+        <div class="sw-desc">3ds Max by Autodesk is the definitive platform for 3D architectural visualization, product modeling, and media & entertainment production. Its rich toolset for polygonal modeling, procedural geometry, advanced lighting, and animation rigging makes it the backbone of most professional visualization studios globally.</div>
+        <ul class="sw-features"><li>Polygonal & parametric 3D modeling</li><li>V-Ray, Arnold & Corona integration</li><li>Advanced animation & rigging tools</li><li>Particle systems and effects</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-1">
+        <div class="sw-top"><img src="sketchup logo.jpg" alt="SketchUp" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">3D Modeling</span></div>
+        <div class="sw-name">SketchUp</div>
+        <div class="sw-tagline">Intuitive 3D Design for Architects & Designers</div>
+        <div class="sw-desc">SketchUp is the most widely taught 3D design tool in architecture schools globally. Its push-pull modeling interface is intuitive enough for beginners yet powerful enough for professional use. With a vast 3D Warehouse of pre-made components and plugins like Enscape and V-Ray, it's a complete visualization platform.</div>
+        <ul class="sw-features"><li>Intuitive push-pull modeling</li><li>3D Warehouse component library</li><li>Enscape & V-Ray plugin support</li><li>Layout integration for construction docs</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-2">
+        <div class="sw-top"><img src="chaos vray logo.jpg" alt="Chaos V-Ray" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Rendering Engine</span></div>
+        <div class="sw-name">Chaos V-Ray</div>
+        <div class="sw-tagline">The World's Most Widely Used Renderer</div>
+        <div class="sw-desc">V-Ray by Chaos Group is the undisputed leader in photorealistic rendering for architecture, product design, and media production. Supporting CPU, GPU, and hybrid rendering, V-Ray delivers unmatched physical accuracy, a smart materials system, and integration with 3ds Max, SketchUp, Revit, Rhino, and Maya. It is the industry standard for high-end arch viz output.</div>
+        <ul class="sw-features"><li>CPU, GPU & hybrid rendering</li><li>Physical light & material simulation</li><li>Works with 3ds Max, SketchUp, Revit</li><li>Smart 3D asset library</li></ul>
+      </div>
+      <div class="sw-card reveal">
+        <div class="sw-top"><img src="lumion logo.jpg" alt="Lumion" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Real-Time Rendering</span></div>
+        <div class="sw-name">Lumion</div>
+        <div class="sw-tagline">The Fastest Architectural Visualization Tool</div>
+        <div class="sw-desc">Lumion is purpose-built for architects who need to produce stunning visualizations quickly. With its 2024 release featuring full ray-traced previews, 5x faster rendering speeds, and a library of over 10,000 assets, Lumion enables real-time feedback on every design decision. It integrates seamlessly with Revit, SketchUp, ArchiCAD, AutoCAD, and Rhino via the LiveSync plugin.</div>
+        <ul class="sw-features"><li>Real-time ray-traced previews</li><li>10,000+ ready-to-use 3D assets</li><li>LiveSync with major CAD tools</li><li>5x faster video rendering than prior versions</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-1">
+        <div class="sw-top"><img src="enscape logo.jpg" alt="Enscape" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Real-Time Visualization</span></div>
+        <div class="sw-name">Enscape</div>
+        <div class="sw-tagline">Real-Time Rendering Plugin for BIM & CAD</div>
+        <div class="sw-desc">Enscape is a real-time rendering and virtual reality plugin that plugs directly into Revit, SketchUp, Rhino, ArchiCAD, and Vectorworks. It allows architects to walk through their designs in real time during the modeling process — no separate export or setup required. Enscape's one-click VR export makes it ideal for client presentations and design reviews.</div>
+        <ul class="sw-features"><li>Real-time visualization inside the CAD tool</li><li>One-click VR for Oculus & HTC Vive</li><li>360° panorama export</li><li>Enscape material library</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-2">
+        <div class="sw-top"><img src="d5 render logo.jpg" alt="D5 Render" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Real-Time Rendering</span></div>
+        <div class="sw-name">D5 Render</div>
+        <div class="sw-tagline">AI-Powered Real-Time Rendering Engine</div>
+        <div class="sw-desc">D5 Render is a rapidly growing real-time rendering engine that uses GPU ray tracing and AI-enhanced denoising to deliver high-quality architectural renders at exceptional speed. With an expanding asset library, atmosphere controls, and deep integration with SketchUp, Revit, Rhino, and 3ds Max, D5 Render offers a compelling balance of speed, quality, and ease of use.</div>
+        <ul class="sw-features"><li>GPU real-time ray tracing</li><li>AI-powered denoising technology</li><li>Live sync with SketchUp & Revit</li><li>Massive built-in asset library</li></ul>
+      </div>
+    </div>
+
+    <!-- LIGHTING -->
+    <div style="margin-bottom:1rem" class="reveal"><h3 style="font-family:Syne;font-size:1rem;font-weight:700;color:var(--soft);letter-spacing:.12em;text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid var(--border)">Lighting & Production Tools</h3></div>
+    <div class="sw-grid" style="margin-bottom:3rem">
+      <div class="sw-card reveal">
+        <div class="sw-top"><img src="hdr light studio logo.png" alt="HDR Light Studio" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Lighting Design</span></div>
+        <div class="sw-name">HDR Light Studio</div>
+        <div class="sw-tagline">Professional HDRI Lighting for 3D Renders</div>
+        <div class="sw-desc">HDR Light Studio is the industry's leading tool for creating and painting custom HDRI lighting environments for 3D product and architectural visualization. Used by top automotive studios, product designers, and visualization artists, it allows real-time interactive lighting directly on the 3D surface and exports to V-Ray, Arnold, KeyShot, and other major renderers.</div>
+        <ul class="sw-features"><li>Interactive real-time lighting on 3D surface</li><li>Compatible with V-Ray, Arnold, KeyShot</li><li>Custom HDRI creation and export</li><li>Used in automotive and product rendering</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-1">
+        <div class="sw-top"><img src="shotgrid logo.png" alt="ShotGrid" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Production Tracking</span></div>
+        <div class="sw-name">ShotGrid (Autodesk)</div>
+        <div class="sw-tagline">Production & Creative Pipeline Management</div>
+        <div class="sw-desc">ShotGrid (formerly Shotgun) by Autodesk is the industry-standard platform for managing creative production pipelines in VFX, animation, gaming, and architectural visualization studios. It provides real-time tracking of tasks, deadlines, asset versions, and client review workflows — making it essential for teams managing complex multi-phase visualization projects.</div>
+        <ul class="sw-features"><li>Task and milestone tracking</li><li>Asset version management</li><li>Client review and approval tools</li><li>Integration with 3ds Max, Maya, Nuke</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-2">
+        <div class="sw-top"><img src="adobe suites logo.jpg" alt="Adobe Creative Cloud" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Creative Suite</span></div>
+        <div class="sw-name">Adobe Suites</div>
+        <div class="sw-tagline">The Complete Creative Professional Toolkit</div>
+        <div class="sw-desc">Adobe Creative Cloud includes Photoshop (photo editing & compositing), Illustrator (vector graphics), InDesign (layout & publishing), Premiere Pro (video editing), After Effects (motion graphics), and Lightroom. Indispensable for post-processing architectural renders, marketing material creation, and visual presentation design.</div>
+        <ul class="sw-features"><li>Photoshop for render post-processing</li><li>Illustrator & InDesign for presentations</li><li>Premiere Pro & After Effects for video</li><li>Creative Cloud subscription licensing</li></ul>
+      </div>
+    </div>
+
+    <!-- CREATIVE & PRODUCTIVITY -->
+    <div style="margin-bottom:1rem" class="reveal"><h3 style="font-family:Syne;font-size:1rem;font-weight:700;color:var(--soft);letter-spacing:.12em;text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid var(--border)">Creative Design & Business Productivity</h3></div>
+    <div class="sw-grid">
+      <div class="sw-card reveal">
+        <div class="sw-top"><img src="coreldraw logo.jfif" alt="CorelDRAW" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Graphic Design</span></div>
+        <div class="sw-name">CorelDRAW</div>
+        <div class="sw-tagline">Professional Vector Illustration & Layout Design</div>
+        <div class="sw-desc">CorelDRAW Graphics Suite is a leading vector illustration, layout, and image editing platform preferred by graphic designers for its precision tools, font management, and print-ready output capabilities. It includes CorelDRAW (vector design), Corel PHOTO-PAINT (image editing), and tools for signage, packaging, and multi-page layout design.</div>
+        <ul class="sw-features"><li>Vector illustration & logo design</li><li>Multi-page layout for brochures</li><li>Perpetual license option available</li><li>Print production ready output</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-1">
+        <div class="sw-top"><img src="microsoft products logo.png" alt="Microsoft" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Productivity</span></div>
+        <div class="sw-name">Microsoft Products</div>
+        <div class="sw-tagline">Enterprise Productivity & Cloud Platform</div>
+        <div class="sw-desc">We supply the full range of Microsoft licensing including Microsoft 365 (Word, Excel, PowerPoint, Outlook, Teams), Windows OS licenses (Home, Pro, Server), Azure cloud services, and Volume Licensing for businesses. As an authorized Microsoft reseller, we provide CSP subscription management, genuine activation keys, and compliance documentation.</div>
+        <ul class="sw-features"><li>Microsoft 365 Business & Enterprise</li><li>Windows 11 Home, Pro & Server</li><li>Azure cloud subscription management</li><li>Volume & CSP licensing for teams</li></ul>
+      </div>
+      <div class="sw-card reveal reveal-delay-2">
+        <div class="sw-top"><img src="tally prime logo.png" alt="Tally Prime" style="width:72px;height:72px;object-fit:contain;"/><span class="sw-badge-cat">Accounting Software</span></div>
+        <div class="sw-name">Tally Prime</div>
+        <div class="sw-tagline">India's Leading Business Accounting Platform</div>
+        <div class="sw-desc">TallyPrime is the most widely used accounting and business management software in India, trusted by millions of businesses for GST compliance, inventory management, payroll processing, financial reporting, and banking reconciliation. We provide genuine Tally licenses, multi-user setups, and educational support for businesses of all sizes.</div>
+        <ul class="sw-features"><li>GST-compliant accounting & billing</li><li>Inventory & stock management</li><li>Payroll & TDS processing</li><li>Multi-user server licensing</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section id="cta-banner">
+    <div class="cta-inner reveal">
+      <div class="cta-text">
+        <h2>Not Sure Which Software Is Right for You?</h2>
+        <p>Our software specialists can assess your workflow, team size, and project types to recommend the exact tools and licensing model that will give you the best return on investment. Consultation is free.</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="#contact" class="btn-purple">Get a Recommendation →</a>
+        <a href="architectural.html" class="btn-ghost">See Our Visualization Work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-wrap reveal">
+      <div class="contact-logo">
+        <img src="amss.jpg" alt="AMSS Logo" style="width:100px;height:100px;object-fit:contain;border-radius:12px;"/>
+      </div>
+      <div class="contact-info">
+        <div class="section-tag">Software Licensing</div>
+        <h2>Get a Quote for Your Software Needs</h2>
+        <p>Tell us which software you need and how many seats. We'll come back with genuine pricing, licensing options, and any applicable offers or bundles.</p>
+        <div class="contact-items">
+          <div class="ci"><div class="ci-icon">📧</div><div class="ci-text"><p>Email</p><p>sales@amssolutions.co.in</p></div></div>
+          <div class="ci"><div class="ci-icon">📞</div><div class="ci-text"><p>Phone</p><p>+91 98213 67617 / +91 75693 29819</p></div></div>
+          <div class="ci"><div class="ci-icon">📍</div><div class="ci-text"><p>Location</p><p>ground floor, 4-4-66/1, gunj bazaar, behind mahakali police station, Old Gudi, Old Bhoiguda, Rani Gunj, Secunderabad, Telangana 500015</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="nav-logo" style="pointer-events:none">
+        <div class="logo-badge">AMS</div>
+        <span class="logo-text"><span>AMS</span> Solutions</span>
+      </div>
+      <div class="ft-tag">Architectural · Mechanical · Software — Hyderabad, India</div>
+    </div>
+    <div class="ft-right">
+      <a href="index.html">Home</a>
+      <a href="architectural.html">Architectural</a>
+      <a href="mechanical.html">Mechanical</a>
+      <a href="software.html">Software</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),trail=document.getElementById('cursor-trail');
+    let mx=0,my=0,tx=0,ty=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function at(){tx+=(mx-tx)*.12;ty+=(my-ty)*.12;trail.style.left=tx+'px';trail.style.top=ty+'px';requestAnimationFrame(at);})();
+    document.querySelectorAll('a,button,.sw-card,.why-card').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';trail.style.transform='translate(-50%,-50%) scale(1.5)';});
+      el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';trail.style.transform='translate(-50%,-50%) scale(1)';});
+    });
+    const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    window.addEventListener('scroll',()=>{document.getElementById('navbar').style.padding=window.scrollY>50?'.7rem 4rem':'1.1rem 4rem';});
+  </script>
+</body>
+</html>
